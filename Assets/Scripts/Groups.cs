@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Groups : MonoBehaviour
 {
@@ -81,7 +82,7 @@ public class Groups : MonoBehaviour
                 transform.position += new Vector3(0, 1, 0);
 
                 //已经到位，所以可以测试是否可以删除已经“满”的行
-                Grid.deleteFullRows();
+               Grid.deleteFullRows();
 
                 FindObjectOfType<Spawner>().spawnNext();
                 enabled = false;

@@ -5,8 +5,9 @@ using UnityEngine;
 public class Grid : MonoBehaviour
 {
 
-    public static int w = 10;
-    public static int h = 20;
+    public static int w = 10;//游戏区域的宽度
+    public static int h = 20;//游戏区域的长度
+    public static int count_Fullrows = 0;//记录“满”的条数，便于计算分数
 
     //数据结构
     public static Transform[,] grid = new Transform[w, h];
@@ -37,7 +38,7 @@ public class Grid : MonoBehaviour
     public static void deleteRow(int y)
     {
         //删除某一行的所有数据
-        for(int x = 0; x< w;++x)
+        for (int x = 0; x < w; ++x)
         {
             Destroy(grid[x, y].gameObject);
             grid[x, y] = null;
@@ -50,9 +51,9 @@ public class Grid : MonoBehaviour
         //2、清空该行数据
         //3、视觉上的，改变原来的方块的位置 (Y + (-1))
 
-        for(int x = 0; x<w;++x)
+        for (int x = 0; x < w; ++x)
         {
-            if(grid[x,y] != null)
+            if (grid[x, y] != null)
             {
                 grid[x, y - 1] = grid[x, y];
                 grid[x, y] = null;
@@ -68,18 +69,35 @@ public class Grid : MonoBehaviour
             decreaseRow(i);
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>返回此轮分数</returns>
     public static void deleteFullRows()
     {
-        for(int y = 0;y<h;)
+        for (int y = 0; y < h;)
         {
             if (isRowFull(y))
             {
                 deleteRow(y);
-
+                count_Fullrows++;
                 decreaseRowAbove(y + 1);
             }
             else
                 y++;
         }
+    }
+
+    //计分
+    public static int caculateScore()
+    {
+        //消除1行，是1分；2行，是2分；3行，是4分；4行，是6分。
+        int score_thisRound = 0;
+        if (count_Fullrows == 0) score_thisRound = 0;
+        else if (count_Fullrows == 1) score_thisRound = 1;
+        else
+            score_thisRound = 2 * (count_Fullrows - 1);
+        count_Fullrows = 0;
+        return score_thisRound;
     }
 }
